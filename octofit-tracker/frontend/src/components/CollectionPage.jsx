@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection } from '../api.js'
 
 function formatValue(value) {
   if (value === null || value === undefined || value === '') {
@@ -18,7 +17,7 @@ function formatValue(value) {
   return value
 }
 
-function CollectionPage({ title, description, endpoint, columns }) {
+function CollectionPage({ title, description, load, columns }) {
   const [records, setRecords] = useState([])
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
@@ -28,9 +27,7 @@ function CollectionPage({ title, description, endpoint, columns }) {
 
     async function loadRecords() {
       try {
-        const collection = await fetchCollection(endpoint, {
-          signal: controller.signal,
-        })
+        const collection = await load(controller.signal)
         setRecords(collection)
         setStatus('success')
       } catch (requestError) {
@@ -44,7 +41,7 @@ function CollectionPage({ title, description, endpoint, columns }) {
 
     loadRecords()
     return () => controller.abort()
-  }, [endpoint])
+  }, [load])
 
   return (
     <section className="collection-page">

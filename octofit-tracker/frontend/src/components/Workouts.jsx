@@ -1,11 +1,16 @@
 import CollectionPage from './CollectionPage.jsx'
+import { fetchCollection as fetch } from '../api.js'
+
+function fetchWorkouts(signal) {
+  return fetch('/api/workouts/', { signal })
+}
 
 function Workouts() {
   return (
     <CollectionPage
       title="Workouts"
       description="Choose a workout that fits your goals and your pace."
-      endpoint="/api/workouts/"
+      load={fetchWorkouts}
       columns={[
         { label: 'Workout', key: 'name' },
         { label: 'Activity', key: 'activityType' },

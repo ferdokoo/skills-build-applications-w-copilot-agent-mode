@@ -1,11 +1,16 @@
 import CollectionPage from './CollectionPage.jsx'
+import { fetchCollection as fetch } from '../api.js'
+
+function fetchActivities(signal) {
+  return fetch('/api/activities/', { signal })
+}
 
 function Activities() {
   return (
     <CollectionPage
       title="Activities"
       description="A log of the movement and milestones your community has recorded."
-      endpoint="/api/activities/"
+      load={fetchActivities}
       columns={[
         { label: 'Activity', key: 'activityType' },
         { label: 'User', key: 'user' },

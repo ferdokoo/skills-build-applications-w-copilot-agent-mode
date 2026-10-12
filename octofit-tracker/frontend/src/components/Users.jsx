@@ -1,11 +1,16 @@
 import CollectionPage from './CollectionPage.jsx'
+import { fetchCollection as fetch } from '../api.js'
+
+function fetchUsers(signal) {
+  return fetch('/api/users/', { signal })
+}
 
 function Users() {
   return (
     <CollectionPage
       title="Users"
       description="Meet the community behind every workout and personal best."
-      endpoint="/api/users/"
+      load={fetchUsers}
       columns={[
         {
           label: 'Name',
