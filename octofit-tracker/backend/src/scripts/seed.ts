@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Activity, Leaderboard, Team, User, Workout } from '../models/index.js';
+import { activity, leaderboard, team, user, workout } from '../models/index.js';
 
 const connectionString = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 
@@ -12,14 +12,14 @@ async function seedDatabase(): Promise<void> {
     console.log('Connected to octofit_db');
 
     await Promise.all([
-      Leaderboard.deleteMany({}),
-      Activity.deleteMany({}),
-      Team.deleteMany({}),
-      User.deleteMany({}),
-      Workout.deleteMany({}),
+      leaderboard.deleteMany({}),
+      activity.deleteMany({}),
+      team.deleteMany({}),
+      user.deleteMany({}),
+      workout.deleteMany({}),
     ]);
 
-    const users = await User.insertMany([
+    const users = await user.insertMany([
       { username: 'maya.chen', email: 'maya.chen@example.com', firstName: 'Maya', lastName: 'Chen' },
       { username: 'leo.martinez', email: 'leo.martinez@example.com', firstName: 'Leo', lastName: 'Martinez' },
       { username: 'amina.patel', email: 'amina.patel@example.com', firstName: 'Amina', lastName: 'Patel' },
@@ -28,7 +28,7 @@ async function seedDatabase(): Promise<void> {
       { username: 'ethan.williams', email: 'ethan.williams@example.com', firstName: 'Ethan', lastName: 'Williams' },
     ]);
 
-    const teams = await Team.insertMany([
+    const teams = await team.insertMany([
       {
         name: 'Trail Blazers',
         description: 'A team focused on running, hiking, and outdoor challenges.',
@@ -57,7 +57,7 @@ async function seedDatabase(): Promise<void> {
       { user: users[5], team: teams[1], activityType: 'running', duration: 24, distance: 3.5, points: 35, daysAgo: 2 },
     ];
 
-    await Activity.insertMany(
+    await activity.insertMany(
       activityRecords.map(({ user, team, daysAgo, ...activity }) => ({
         ...activity,
         user: user._id,
@@ -75,7 +75,7 @@ async function seedDatabase(): Promise<void> {
       (left, right) =>
         (pointsByUser.get(right._id.toString()) ?? 0) - (pointsByUser.get(left._id.toString()) ?? 0),
     );
-    await Leaderboard.insertMany(
+    await leaderboard.insertMany(
       rankedUsers.map((user, index) => ({
         user: user._id,
         team: teams.find((team) => team.members.some((member) => member.equals(user._id)))!._id,
@@ -84,7 +84,7 @@ async function seedDatabase(): Promise<void> {
       })),
     );
 
-    await Workout.insertMany([
+    await workout.insertMany([
       {
         name: 'Easy Start Run',
         description: 'A relaxed run to build an aerobic base and establish a comfortable pace.',

@@ -2,23 +2,30 @@ import { Router } from 'express'
 import type { Model } from 'mongoose'
 import { Activity, Leaderboard, Team, User, Workout } from '../models/index.js'
 
-function createCollectionRouter<T>(collection: Model<T>): Router {
-  const router = Router()
-
-  router.get('/', async (_request, response) => {
-    const documents = await collection.find().lean().exec()
-    response.json(documents)
-  })
-
-  return router
+async function getCollection<T>(collection: Model<T>) {
+  return collection.find().lean().exec()
 }
 
-const apiRouter = Router()
+const router = Router()
 
-apiRouter.use('/users', createCollectionRouter(User))
-apiRouter.use('/teams', createCollectionRouter(Team))
-apiRouter.use('/activities', createCollectionRouter(Activity))
-apiRouter.use('/leaderboard', createCollectionRouter(Leaderboard))
-apiRouter.use('/workouts', createCollectionRouter(Workout))
+router.get('/api/users/', async (_request, response) => {
+  response.json(await getCollection(User))
+})
 
-export default apiRouter
+router.get('/api/teams/', async (_request, response) => {
+  response.json(await getCollection(Team))
+})
+
+router.get('/api/activities/', async (_request, response) => {
+  response.json(await getCollection(Activity))
+})
+
+router.get('/api/leaderboard/', async (_request, response) => {
+  response.json(await getCollection(Leaderboard))
+})
+
+router.get('/api/workouts/', async (_request, response) => {
+  response.json(await getCollection(Workout))
+})
+
+export default router
